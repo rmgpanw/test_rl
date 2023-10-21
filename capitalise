@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Loop through all command line arguments, capitalize each argument, and echo them
+for arg in "$@"; do
+    capitalized_arg=$(echo "$arg" | tr '[:lower:]' '[:upper:]')
+    echo "$capitalized_arg"
+done

@@ -1,0 +1,35 @@
+name: Docker Build & Push
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get commit SHA
+        id: extract_commit_sha
+        run: echo "::set-output name=commit_sha::${{ github.sha }}" 
+
+      - name: Build and push Docker image
+        run: |
+          # tag name
+          TAG_BASE="rmgpanw/rlbase:"
+          TAG_NAME="${TAG_BASE}$(cat VERSION.md)"
+
+          # Build the new Docker image with the combined tag
+          docker build -t $TAG_NAME .
+
+          # Push the new Docker image
+          docker push $TAG_NAME
+          docker push "${TAG_BASE}latest"
