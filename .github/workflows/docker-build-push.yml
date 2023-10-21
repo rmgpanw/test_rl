@@ -17,19 +17,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Get commit SHA
-        id: extract_commit_sha
-        run: echo "::set-output name=commit_sha::${{ github.sha }}" 
-
-      - name: Build and push Docker image
+      - name: Set image tag name
+        id: image_tag
         run: |
           # tag name
-          TAG_BASE="rmgpanw/rlbase:"
-          TAG_NAME="${TAG_BASE}$(cat VERSION.md)"
+          TAG_BASE="rmgpanw/rlbase"
+          TAG_NAME="${TAG_BASE}:$(cat VERSION.md)"
+          echo "::set-output name=tag_base::${TAG_BASE}" 
+          echo "::set-output name=tag_name::${TAG_NAME}"
 
-          # Build the new Docker image with the combined tag
-          docker build -t $TAG_NAME .
-
-          # Push the new Docker image
-          docker push $TAG_NAME
-          docker push "${TAG_BASE}latest"
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.image_tag.outputs.tag_name }}
+          cache-from: type=registry,ref=${{ steps.image_tag.outputs.tag_name }}
+          cache-to: type=inline
