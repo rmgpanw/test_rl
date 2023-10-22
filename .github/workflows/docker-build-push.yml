@@ -27,7 +27,7 @@ jobs:
           TAG_NAME_DEV="${TAG_BASE}:$(cat VERSION.md)-dev"
           echo "::set-output name=tag_base::${TAG_BASE}" 
           echo "::set-output name=tag_name::${TAG_NAME}"
-          echo "::set-output name=tag_name_dev::${TAG_NAME_DEV}
+          echo "::set-output name=tag_name_dev::${TAG_NAME_DEV}"
 
       - name: Build and push latest
         uses: docker/build-push-action@v5
