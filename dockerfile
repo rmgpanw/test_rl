@@ -46,7 +46,6 @@ ENV TZ=Europe/London
 
 # Copy the RegeniePipeline into the image and make executable (dummy program for now)
 COPY ./capitalise /usr/local/bin/capitalise
-RUN chmod +x /usr/local/bin/capitalise
 
 # Define the run script
 ENTRYPOINT ["/usr/local/bin/capitalise"]
