@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   build:
@@ -23,8 +24,10 @@ jobs:
           # tag name
           TAG_BASE="rmgpanw/rlbase"
           TAG_NAME="${TAG_BASE}:$(cat VERSION.md)"
+          TAG_NAME_DEV="${TAG_BASE}:$(cat VERSION.md)-dev"
           echo "::set-output name=tag_base::${TAG_BASE}" 
           echo "::set-output name=tag_name::${TAG_NAME}"
+          echo "::set-output name=tag_name_dev::${TAG_NAME_DEV}
 
       - name: Build and push latest
         uses: docker/build-push-action@v5
@@ -43,5 +46,5 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.image_tag.outputs.tag_name }}
-          cache-from: type=registry,ref=${{ steps.image_tag.outputs.tag_name }}
+          cache-from: type=registry,ref=${{ steps.image_tag.outputs.tag_name_dev }}
           cache-to: type=inline
