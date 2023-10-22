@@ -26,8 +26,19 @@ jobs:
           echo "::set-output name=tag_base::${TAG_BASE}" 
           echo "::set-output name=tag_name::${TAG_NAME}"
 
-      - name: Build and push
+      - name: Build and push latest
         uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.image_tag.outputs.tag_name }}
+          cache-from: type=registry,ref=${{ steps.image_tag.outputs.tag_name }}
+          cache-to: type=inline
+
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/dev'
         with:
           context: .
           push: true
