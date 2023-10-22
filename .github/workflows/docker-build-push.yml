@@ -45,6 +45,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.image_tag.outputs.tag_name }}
+          tags: ${{ steps.image_tag.outputs.tag_name_dev }}
           cache-from: type=registry,ref=${{ steps.image_tag.outputs.tag_name_dev }}
           cache-to: type=inline
